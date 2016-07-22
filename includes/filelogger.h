@@ -1,7 +1,7 @@
-// Copyright 2016 Airtame
+// Copyright 2016 Pierre Fourgeaud
 
-#ifndef MANAGEDEVICE_LOGGING_FILELOGGER_H_
-#define MANAGEDEVICE_LOGGING_FILELOGGER_H_
+#ifndef PF_FILELOGGER_H_
+#define PF_FILELOGGER_H_
 
 #include <iostream>
 #include <fstream>
@@ -9,33 +9,40 @@
 
 #include "./iloglistener.h"
 
-const std::string DEFAULT_FILENAME = "log.txt";
+const std::string DEFAULT_FILEPATH = "./log.txt";
 
+/**
+ * @brief The FileLogger class
+ *
+ * Logger that will write the ouput in a file.
+ */
 class FileLogger : public ILogListener {
 public:
-    explicit FileLogger(const std::string& iFileName = "", const std::string& iPath = "")
+    explicit FileLogger(const std::string& iFileName = DEFAULT_FILEPATH)
         : m_FileName(iFileName)
-        , m_Path(iPath)
         , m_IsCreated(false) {
-        if (m_FileName == "") {
-            m_FileName = DEFAULT_FILENAME;
-        }
-
-        // Just check if there is a slash at the end of the path
-        // Because it has to be there to create a valid path
-        if (m_Path != "" && m_Path[m_Path.length() - 1] == '/') {
-            m_Path += "/";
-        }
 
         _OpenFile();
     }
 
+    /**
+     * Virtual Destructor
+     *
+     * Have the responsability to close the file if it is still open.
+     */
     virtual ~FileLogger() {
         if (m_File.is_open()) {
             m_File.close();
         }
     }
 
+    /**
+     * @brief Notify Mandatory method to implement for every log listener.
+     *        Will be called everytime there is a new message.
+     *
+     * @param iLog The message
+     * @param iLevel The log level
+     */
     void Notify(const std::string& iLog, ELogLevel iLevel) {
         if (m_File.is_open()) {
             m_File << iLog;
@@ -43,11 +50,24 @@ public:
         }
     }
 
+    /**
+     * @brief GetFileName Return the filename.
+     *
+     * @return Return the filename as a string.
+     */
     inline std::string GetFileName() const {
         return m_FileName;
     }
 
-    bool ChangeFile(std::string iFileName) {
+    /**
+     * @brief ChangeFile Allow to change the file we log to during the execution
+     *        (useful to keep a certain size for every log files)
+     *
+     * @param iFileName The path to the new file
+     *
+     * @return true if change successful, false otherwise
+     */
+    bool ChangeFile(const std::string& iFileName) {
         if (m_File.is_open()) {
             m_File.close();
         }
@@ -60,14 +80,14 @@ public:
 
 private:
     std::string m_FileName;
-    std::string m_Path;
-
     std::ofstream m_File;
+    bool m_IsCreated;
 
-    bool        m_IsCreated;
-
+    /**
+     * @brief _OpenFile Private function that create (or open and empty) the file.
+     */
     void _OpenFile() {
-        m_File.open(m_Path + m_FileName);
+        m_File.open(m_FileName);
 
         if (m_File.is_open()) {
             m_IsCreated = true;
@@ -75,4 +95,4 @@ private:
     }
 };
 
-#endif  // MANAGEDEVICE_LOGGING_FILELOGGER_H_
+#endif // PF_FILELOGGER_H_
