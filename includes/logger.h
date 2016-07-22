@@ -13,6 +13,11 @@
 
 #include "./iloglistener.h"
 
+/**
+ * @brief The ELogLevel enum
+ *
+ * Represent the log levels available.
+ */
 enum class ELogLevel {
     Critical,
     Error,
@@ -182,6 +187,14 @@ public:
         return buffer[to_i(iLevel)];
     }
 
+    /**
+     * Return the log level corresponding to the string passed in argument.
+     * If the string doesn't correspond to any level, Info will be returned.
+     *
+     * @param iLevel The log level in string
+     *
+     * @return An enum class representing the log level.
+     */
     static ELogLevel FromString(const std::string& iLevel) {
         if (iLevel == "DEBUG2") {
             return ELogLevel::Debug2;
@@ -208,6 +221,11 @@ protected:
     std::ostringstream m_Os;
     ELogLevel          m_Level = ELogLevel::Info;
 
+    /**
+     * Notify all listeners that a new message is available to be treated.
+     *
+     * @return true if there is listeners receiving the message, false otherwise.
+     */
     bool _NotifyListeners() {
         std::string tmp = m_Os.str();
         std::for_each(Listeners().begin(), Listeners().end(), Notifier(tmp, m_Level));
