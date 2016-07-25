@@ -4,13 +4,17 @@ Single header only logger library for C++. Focused on performance, simplicity an
 ### Table of Contents
 <pre>
 <a href="#introduction">Getting Started</a>
-    <a href="#why-yet-another-library">Example</a>
-<a href="#getting-started">Log Levels</a>
-<a href="#getting-started">Loggers available</a>
-<a href="#getting-started">Implement your own logger</a>
-<a href="#getting-started">TODOs</a>
+    <a href="#example">Example</a>
+<a href="#usage">Usage</a>
+    <a href="#log-levels">Log Levels</a>
+    <a href="#loggers-available">Loggers available</a>
+        <a href="#consolelogger">ConsoleLogger</a>
+        <a href="#filelogger">FileLogger</a>
+        <a href="#bufferlogger">BufferLogger</a>
+    <a href="#implement-your-own-logger">Implement your own logger</a>
+<a href="#todos">TODOs</a>
 <a href="#contributing">Contributing</a>
-    <a href="#found-an-issue">Found an issue ?</a>
+    <a href="#found-an-issue-">Found an issue ?</a>
     <a href="#pull-requests">Pull requests</a>
 </pre>
 
@@ -170,8 +174,8 @@ networklogger.h:
 
 class NetworkLogger : public ILogListener {
 public:
-    NetworkLogger() {
-        m_MySocket = connect("http://mylog.mycompany.com:1234");
+    NetworkLogger(const std::string& iServerURI) {
+        m_MySocket = connect(iServerURI.c_str());
     }
 
     ~NetworkLogger() {
@@ -198,7 +202,7 @@ And now, just use it !
 #include "networklogger.h"
 
 int main() {
-  ILogListener* networkLogger = new NetworkLogger;
+  ILogListener* networkLogger = new NetworkLogger("http://mylog.mycompany.com:1234");
   Logger::AddListener(networkLogger);
 
   LOGI << "As simple as that :)" << std::endl;
