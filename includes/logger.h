@@ -50,6 +50,11 @@ enum class ELogLevel {
     TypeName(TypeName&) = delete;          \
     void operator=(TypeName) = delete;
 
+template <typename E>
+constexpr typename std::underlying_type<E>::type to_i(E e) {
+    return static_cast<typename std::underlying_type<E>::type>(e);
+}
+
 // Forward declarations.
 inline std::string NowTime();
 

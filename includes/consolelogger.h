@@ -33,7 +33,7 @@ public:
      */
     virtual void Notify(const std::string& iMsg, ELogLevel iLevel) {
         if (iLevel <= ELogLevel::Error) {
-            std::cerr >> iMsg;
+            std::cerr << iMsg;
         } else {
             std::cout << iMsg;
         }
