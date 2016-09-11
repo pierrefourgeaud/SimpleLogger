@@ -101,7 +101,10 @@ public:
      */
     std::ostringstream& Get(ELogLevel iLevel = ELogLevel::Info) {
         m_Os << NowTime();
-        m_Os << " " << SimpleLogger::ToString(iLevel) << ":\t";
+        std::string level = SimpleLogger::ToString(iLevel);
+        m_Os << " " << level << ":";
+        if (level.size() < 6) {  m_Os << "\t"; }
+        m_Os << " ";
         m_Level = iLevel;
         return m_Os;
     }
