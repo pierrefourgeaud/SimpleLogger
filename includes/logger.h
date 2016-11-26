@@ -268,7 +268,7 @@ inline std::string NowTime() {
 #include <sys/time.h>
 
 inline std::string NowTime() {
-    char buffer[11];
+    char buffer[20];
     time_t t;
     time(&t);
     tm r = {0};
