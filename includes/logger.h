@@ -253,7 +253,7 @@ private:
 inline std::string NowTime() {
     const int MAX_LEN = 200;
     char buffer[MAX_LEN];
-    if (GetTimeFormatA(LOCALE_USER_DEFAULT, 0, 0, "HH':'mm':'ss", buffer, MAX_LEN) == 0) {
+    if (GetTimeFormatA(LOCALE_USER_DEFAULT, 0, 0, "yyyy-mm-dd HH':'mm':'ss", buffer, MAX_LEN) == 0) {
         return "Error in NowTime()";
     }
 
@@ -272,7 +272,7 @@ inline std::string NowTime() {
     time_t t;
     time(&t);
     tm r = {0};
-    strftime(buffer, sizeof(buffer), "%X", localtime_r(&t, &r));
+    strftime(buffer, sizeof(buffer), "%F %T", localtime_r(&t, &r));
     struct timeval tv;
     gettimeofday(&tv, 0);
     char result[100] = {0};
