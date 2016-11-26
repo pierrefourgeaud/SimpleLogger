@@ -34,11 +34,11 @@ Let's log to console for example:
 
 int main() {
   ILogListener* consoleLogger = new ConsoleLogger;
-  Logger::AddListener(consoleLogger);
+  SimpleLogger::AddListener(consoleLogger);
 
   LOGI << "As simple as that :)" << std::endl;
 
-  Logger::RemoveListener(consoleLogger);
+  SimpleLogger::RemoveListener(consoleLogger);
   delete consoleLogger;
 }
 ```
@@ -95,11 +95,11 @@ static const std::string g_FilePath = "/home/me/cool.log";
 
 int main() {
   ILogListener* fileLogger = new FileLogger(g_FilePath);
-  Logger::AddListener(fileLogger);
+  SimpleLogger::AddListener(fileLogger);
 
   LOGI << "As simple as that :)" << std::endl;
 
-  Logger::RemoveListener(fileLogger);
+  SimpleLogger::RemoveListener(fileLogger);
   delete fileLogger;
 }
 ```
@@ -125,7 +125,7 @@ The usage is the same as the others:
 
 int main() {
   ILogListener* bufferLogger = new BufferLogger;
-  Logger::AddListener(bufferLogger);
+  SimpleLoggerLogger::AddListener(bufferLogger);
 
   LOGI << "As simple as that :)" << std::endl;
   LOGI << "Isn't it ?" << std::endl;
@@ -134,7 +134,7 @@ int main() {
 
   std::cout << bufferLogger.GetBuffer() << std::endl;
 
-  Logger::RemoveListener(bufferLogger);
+  SimpleLogger::RemoveListener(bufferLogger);
   delete bufferLogger;
 }
 ```
@@ -203,11 +203,11 @@ And now, just use it !
 
 int main() {
   ILogListener* networkLogger = new NetworkLogger("http://mylog.mycompany.com:1234");
-  Logger::AddListener(networkLogger);
+  SimpleLogger::AddListener(networkLogger);
 
   LOGI << "As simple as that :)" << std::endl;
 
-  Logger::RemoveListener(networkLogger);
+  SimpleLogger::RemoveListener(networkLogger);
   delete networkLogger;
 }
 ```
