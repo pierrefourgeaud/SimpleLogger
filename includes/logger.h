@@ -10,6 +10,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <time.h>
 
 #include "./iloglistener.h"
 
@@ -247,39 +249,33 @@ private:
 };
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-
 #include <windows.h>
-
-inline std::string NowTime() {
-    const int MAX_LEN = 200;
-    char buffer[MAX_LEN];
-    if (GetTimeFormatA(LOCALE_USER_DEFAULT, 0, 0, "yyyy-mm-dd HH':'mm':'ss", buffer, MAX_LEN) == 0) {
-        return "Error in NowTime()";
-    }
-
-    char result[100] = {0};
-    static DWORD first = GetTickCount();
-    std::snprintf(result, sizeof(result), "%s.%03d", buffer, static_cast<int>(GetTickCount() - first) % 1000);
-    return result;
-}
-
 #else
-
 #include <sys/time.h>
+#endif // WIN32
 
 inline std::string NowTime() {
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
     char buffer[20];
-    time_t t;
-    time(&t);
-    tm r = {0};
-    strftime(buffer, sizeof(buffer), "%F %T", localtime_r(&t, &r));
+    tm r = { 0 };
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+    localtime_s(&r, &in_time_t);
+	static DWORD first = GetTickCount();
+	int tick = static_cast<int>(GetTickCount() - first) % 1000;
+#else
+    localtime_r(&in_time_t, &r);
     struct timeval tv;
     gettimeofday(&tv, 0);
-    char result[100] = {0};
-    std::snprintf(result, sizeof(result), "%s.%03d", buffer, static_cast<int>(tv.tv_usec) / 1000);
+    int tick =  static_cast<int>(tv.tv_usec) / 1000;
+#endif // WIN32
+    strftime(buffer, sizeof(buffer), "%F %T", &r);
+
+    char result[100] = { 0 };
+    std::snprintf(result, sizeof(result), "%s.%03d", buffer, tick);
+
     return result;
 }
-
-#endif // WIN32
 
 #endif // PF_SIMPLELOGGER_H_
