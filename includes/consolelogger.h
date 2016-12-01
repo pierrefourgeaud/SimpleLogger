@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 #include "./iloglistener.h"
-#include "./Logger.h"
+#include "./logger.h"
 
 /**
  * @brief The FileLogger class
