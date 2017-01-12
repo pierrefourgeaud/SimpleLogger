@@ -44,6 +44,7 @@ public:
      * @param iLevel The log level
      */
     void Notify(const std::string& iLog, ELogLevel iLevel) {
+        (void)iLevel; // Unsused parameter
         if (m_File.is_open()) {
             m_File << iLog;
             m_File.flush();

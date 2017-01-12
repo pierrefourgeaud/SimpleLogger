@@ -259,7 +259,7 @@ inline std::string NowTime() {
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
     char buffer[20];
-    tm r = { 0 };
+    tm r;
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
     localtime_s(&r, &in_time_t);
 	static DWORD first = GetTickCount();
