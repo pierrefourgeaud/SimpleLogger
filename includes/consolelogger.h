@@ -35,7 +35,7 @@ public:
         if (iLevel <= ELogLevel::Error) {
             std::cerr << iMsg;
         } else {
-            std::cout << iMsg;
+            std::cout << iMsg << std::flush;
         }
     }
 };
