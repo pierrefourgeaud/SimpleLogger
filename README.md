@@ -11,6 +11,7 @@ Single header only logger library for C++. Focused on performance, simplicity an
         <a href="#consolelogger">ConsoleLogger</a>
         <a href="#filelogger">FileLogger</a>
         <a href="#bufferlogger">BufferLogger</a>
+        <a href="#syslogger">SysLogger</a>
     <a href="#implement-your-own-logger">Implement your own logger</a>
 <a href="#todos">TODOs</a>
 <a href="#contributing">Contributing</a>
@@ -74,7 +75,7 @@ _In some program, performance is a must. In order to not impact performance but 
 
 ## Loggers available
 
-SimpleLogger provide 3 default loggers: ConsoleLogger, FileLogger and BufferLogger.
+SimpleLogger provides 4 default loggers: ConsoleLogger, FileLogger, BufferLogger and SysLogger.
 
 ### ConsoleLogger
 
@@ -146,6 +147,41 @@ $ ./MySimpleLog
 Waiting to print the logs...
 16:39:35.394 INFO: As simple as that :)
 16:39:35.394 INFO: Isn't it ?
+```
+
+### SysLogger
+
+This one will log messages into the Linux system log (syslog).
+
+```cpp
+#include <logger.h>
+#include <syslogger.h>
+
+int main() {
+  ILogListener* sysLogger = new SysLogger("SysLoggerTest");
+  SimpleLogger::AddListener(sysLogger);
+
+  LOGI << "(Sys)Logging info..." << std::endl;
+  LOGW << "(Sys)Logging warning..." << std::endl;
+  LOGE << "(Sys)Logging error..." << std::endl;
+  LOGC << "(Sys)Logging critical..." << std::endl;
+
+  SimpleLogger::RemoveListener(sysLogger);
+  delete sysLogger;
+
+  return 0;
+}
+```
+
+As you can expect:
+
+```
+$ ./SysLoggerTest
+$ journalctl -f
+SysLoggerTest[32391]: 2017-06-09 11:06:12.560 INFO:         (Sys)Logging info...
+SysLoggerTest[32391]: 2017-06-09 11:06:12.560 INFO:         (Sys)Logging info...
+SysLoggerTest[32391]: 2017-06-09 11:06:12.562 ERROR:        (Sys)Logging error...
+SysLoggerTest[32391]: 2017-06-09 11:06:12.562 CRITICAL:     (Sys)Logging critical...
 ```
 
 ## Implement your own logger
