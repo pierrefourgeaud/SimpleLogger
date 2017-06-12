@@ -41,7 +41,7 @@ public:
      * @param iLevel The log level
      */
     virtual void Notify(const std::string& iMsg, ELogLevel iLevel) {
-        syslog(_ELevelToSysLevel(iLevel), iMsg.c_str());
+        syslog(_ELevelToSysLevel(iLevel), "%s", iMsg.c_str());
     }
 
 private:
