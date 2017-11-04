@@ -258,12 +258,13 @@ inline std::string NowTime() {
     auto now = std::chrono::system_clock::now();
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
-    char buffer[20];
+    char buffer[20] = { 0 };
     tm r;
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-    localtime_s(&r, &in_time_t);
-	static DWORD first = GetTickCount();
-	int tick = static_cast<int>(GetTickCount() - first) % 1000;
+    // No using localtime_s here because we want to support MinGW/MSYS compilation too
+    r = *localtime(&in_time_t);
+    static DWORD first = GetTickCount();
+    int tick = static_cast<int>(GetTickCount() - first) % 1000;
 #else
     localtime_r(&in_time_t, &r);
     struct timeval tv;
